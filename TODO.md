@@ -1,0 +1,4 @@
+- Conectar el LCD a la RPi por I2C junto con el lector NFC
+- Instalar la librerías necesarias para poder utilizar el lector LCD
+- Implementar la lógica para mostrar por el LCD el mensaje de "Acerque tarjeta" o similar
+- Actualizar el LCD con el nombre recibido del servidor

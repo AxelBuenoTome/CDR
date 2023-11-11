@@ -1,8 +1,0 @@
-import requests
-
-String url = 'https://loQueSea/html'  #Habrá que poner el link correspondiente a nuestra base de datos
-String uid = 'A5718CAC' 
-pull = url+uid
-nombre = requests.get(pull)
-#habrá que verificar si el código del html es correcto o es un error
-print(nombre)

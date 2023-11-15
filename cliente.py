@@ -62,7 +62,7 @@ class RFID_Client(Gtk.Window):
 
     def show_welcome(self, nombre):
         self.label.set_markup(f'<span size="x-large" weight="bold">{nombre}</span>')
-         self.lcd.Imprimir("\n      Welcome\n"+nombre)            #
+         self.lcd.Imprimir("\nWelcome\n"+nombre)              #
 
         if self.logout_button is None:
             self.logout_button = Gtk.Button(label="Logout")

@@ -12,6 +12,7 @@
 ### Servidor
 
 - Configurar un servidor Node.js que pueda recibir solicitudes HTTP GET.
+- Crear todas las tablas y añadir contenido.
 - Procesar la solicitud recibida y enviar una respuesta al cliente.
 
 ### Sugerencias

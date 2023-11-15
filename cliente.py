@@ -5,11 +5,14 @@ from gi.repository import Gtk, GLib, Pango, Gdk
 
 from threading import Thread, Event
 from puzzle_1_4 import RfidReader  # Importa la clase desde el otro archivo
+from LCD import Mejorado1                 # Importa la clase
+                                    #EN UNO DE LOS DOS CONSTRUCTORES HABRÁ QUE CAMBIAR LA DIRECCIÓN DEL I2C
 
 class RFID_Client(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="NFC Card Reader")
         self.set_default_size(400, 200)
+        self.lcd = Mejorado1()
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -33,6 +36,7 @@ class RFID_Client(Gtk.Window):
 
     def set_welcome_message(self):
         self.label.set_markup('<span size="x-large" weight= "bold" foreground="black">Please, login with your university card</span>')
+        self.lcd.Imprimir("\nPlease, login with your university card")            #
 
     def read_uid_thread(self):
         while True:
@@ -43,9 +47,11 @@ class RFID_Client(Gtk.Window):
             response = requests.get(url, params={"uid": uid})
             if response.status_code == 200:
                 nombre = response.text
+                
                 GLib.idle_add(self.show_welcome, nombre)
                 # Mostrar el cuadro de entrada de texto después de identificar al usuario
                 GLib.idle_add(self.show_entry)
+                
             else:
                 mensaje = "No se pudo obtener el nombre"
                 GLib.idle_add(self.show_error, mensaje)
@@ -56,6 +62,7 @@ class RFID_Client(Gtk.Window):
 
     def show_welcome(self, nombre):
         self.label.set_markup(f'<span size="x-large" weight="bold">{nombre}</span>')
+         self.lcd.Imprimir("\n      Welcome\n"+nombre)            #
 
         if self.logout_button is None:
             self.logout_button = Gtk.Button(label="Logout")

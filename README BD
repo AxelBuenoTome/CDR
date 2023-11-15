@@ -1,2 +1,4 @@
 Para la correcta activación de la instancia local del servidor hay que ir a servicios -> mysql80 -> iniciar
 Una vez se ha iniciado el servicio ya se puede entrar en la base de datos y operar con ella
+
+Falta eliminar las columnas alumnoid de la tabla timetable

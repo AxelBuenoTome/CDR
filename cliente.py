@@ -7,7 +7,7 @@ from gi.repository import Gtk, GLib, Pango, Gdk
 
 from threading import Thread, Event
 from puzzle_1_4 import RfidReader  # Importa la clase desde el otro archivo
-from LCD import Mejorado1  # Importa la clase
+from LCD import Mejorado1  # Importa la clase (Habrá que actualizar Mejorado1)
 
 class RFID_Client(Gtk.Window):
     def __init__(self):
@@ -22,7 +22,7 @@ class RFID_Client(Gtk.Window):
         self.label = Gtk.Label()
         self.set_welcome_message()
         self.label.get_style_context().add_class("welcome-label")
-        self.grid.attach(self.label, 0, 0, 1, 1)         # widget, columna, fila, ancho, alto
+        self.grid.attach(self.label, 0, 0, 1, 1)                 # widget, columna, fila, ancho, alto
 
         self.rfid = RfidReader()
         self.is_reading_event = Event()  # Evento para sincronización

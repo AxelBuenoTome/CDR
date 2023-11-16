@@ -22,7 +22,7 @@ class RFID_Client(Gtk.Window):
         self.label = Gtk.Label()
         self.set_welcome_message()
         self.label.get_style_context().add_class("welcome-label")
-        self.grid.attach(self.label, 0, 0, 1, 1)
+        self.grid.attach(self.label, 0, 0, 1, 1)         # widget, columna, fila, ancho, alto
 
         self.rfid = RfidReader()
         self.is_reading_event = Event()  # Evento para sincronización

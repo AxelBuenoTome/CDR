@@ -21,9 +21,9 @@
 }
 
 .even-row {
-    background-color: #f0f0ff; /* Color azul claro para filas pares */
+    background-color: #c0ecff; /* Color azul claro para filas pares */
 }
 
 .odd-row {
-    background-color: #c0c0ff; /* Color azul oscuro para filas impares */
+    background-color: #4b59db; /* Color azul oscuro para filas impares */
 }

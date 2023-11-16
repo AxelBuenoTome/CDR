@@ -142,8 +142,29 @@ class RFID_Client(Gtk.Window):
                 # Muestra el DataFrame en la consola
                 print(df)
 
-                # Muestra el DataFrame en el TextView de la interfaz gráfica
-                self.buffer.set_text(df.to_string(index=False))
+                #Modificación Para agregarle el estilizado CSS
+                # Limpiamos el grid antes de agregar nuevas filas
+                for child in self.grid.get_children():
+                    self.grid.remove(child)
+
+                # Agregar filas al Gtk.Grid con colores alternados
+                for i, row in enumerate(df.itertuples(), start=0):
+                    for j, value in enumerate(row[1:], start=0):  # Comenzamos desde la columna 0
+                        label = Gtk.Label(label=str(value))
+
+                        # Aplicamos estilos alternantes a las filas
+                        if i % 2 == 0:  # Fila par
+                            label.get_style_context().add_class('even-row')
+                        else:  # Fila impar
+                            label.get_style_context().add_class('odd-row')
+
+                        self.grid.attach(label, j, i, 1, 1)
+
+                # Aplicamos estilos CSS al Gtk.Grid
+                self.load_css()
+
+                # Muestra el DataFrame en el TextView de la interfaz gráfica (Comentado xq en teoria no hace falta)
+                #self.buffer.set_text(df.to_string(index=False))
 
             else:
                 mensaje = "Respuesta inesperada del servidor"

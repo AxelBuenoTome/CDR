@@ -1,0 +1,21 @@
+/* Estilo para la etiqueta de bienvenida */
+#label {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+/* Estilo para el botón de logout */
+#logout-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Estilo para el botón de logout al pasar el ratón sobre él */
+#logout-button:hover {
+    background-color: darkred;
+}

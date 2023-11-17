@@ -37,7 +37,6 @@ class RFID_Client(Gtk.Window):
         self.textview = Gtk.TextView()
         self.textview.set_editable(False)
         self.textview.set_cursor_visible(False)
-        self.grid.attach(self.textview, 0, 2, 1, 1)
 
         # Obtener el buffer del TextView
         self.buffer = self.textview.get_buffer()

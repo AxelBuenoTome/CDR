@@ -143,9 +143,6 @@ class RFID_Client(Gtk.Window):
                 print(df)
 
                 #Modificación Para agregarle el estilizado CSS
-                # Limpiamos el grid antes de agregar nuevas filas
-                for child in self.grid.get_children():
-                    self.grid.remove(child)
 
                 # Agregar filas al Gtk.Grid con colores alternados
                 for i, row in enumerate(df.itertuples(), start=0):

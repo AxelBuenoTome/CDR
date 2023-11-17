@@ -155,13 +155,10 @@ class RFID_Client(Gtk.Window):
                         else:  # Fila impar
                             label.get_style_context().add_class('odd-row')
 
-                        self.grid.attach(label, j, i, 1, 1)
+                        self.grid.attach(label, j, i+2, 1, 1)
 
                 # Aplicamos estilos CSS al Gtk.Grid
                 self.load_css()
-
-                # Muestra el DataFrame en el TextView de la interfaz gráfica (Comentado xq en teoria no hace falta)
-                #self.buffer.set_text(df.to_string(index=False))
 
             else:
                 mensaje = "Respuesta inesperada del servidor"

@@ -55,7 +55,7 @@ class RFID_Client(Gtk.Window):
             # guardamos el uid internamente                                                Está guardado en la clase o en el hilo? xq lo que interesaría es que esté guardada en el hilo
             self.uidGuardado = uid                                                        #Y así cada cliente tendrá vinculado su uid.
             # Realiza la solicitud HTTP GET al servidor para obtener el nombre
-            url = "http://127.0.0.1:3000/obtenerNombre"                                       #El de ahora es el localhost y el 10.42.0.26 es la Raspberry
+            url = "http://192.168.93.43:3000"                     #/obtenerNombre                  El de ahora es el localhost y el 10.42.0.26 es la Raspberry
             response = requests.get(url, params={"uid": uid})
             if response.status_code == 200:
                 nombre = response.text
@@ -116,7 +116,7 @@ class RFID_Client(Gtk.Window):
         print(f"Texto ingresado: {text}")
 
         # Realiza la solicitud HTTP GET al servidor para obtener las notas
-        url = f"http://127.0.0.1:3000/{text}"        #El de ahora es el localhost y el 10.42.0.26 es la Raspberry
+        url = f"http://192.168.93.43:3000/{text}"        #El de ahora es el localhost y el 10.42.0.26 es la Raspberry
         params = {"uid": self.uidGuardado}
 
         response = requests.get(url, params=params)

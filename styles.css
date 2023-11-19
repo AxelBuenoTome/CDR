@@ -1,0 +1,23 @@
+.welcome-label {
+    background-color: #3498db; /* Color de fondo azul */
+    padding: 10px; /* Relleno para dar espacio al texto */
+    color: white; /* Color del texto */
+}
+
+.logout-button {
+    margin-top: 10px; /* Margen superior para separar del borde */
+    margin-right: 10px; /* Margen derecho para separar del borde y de otros elementos */
+    background-color: #e74c3c; /* Color de fondo rojo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 5px 10px; /* Relleno para dar espacio al texto */
+}
+
+.even-row{
+    background-color: #c0ecff;
+}
+    
+.odd-row{
+    background-color: #4b59db;
+}
+   

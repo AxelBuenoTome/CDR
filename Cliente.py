@@ -6,6 +6,60 @@ import json
 import gi
 gi.require_version('Gtk', '3.0')
 
+
+class RFID_Client(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="NFC Card Reader")
+        self.set_default_size(400, 200)
+        self.lcd = lcdPrint()
+
+        self.grid = Gtk.Grid()
+        self.add(self.grid)
+
+        # Inicialmente muestra el mensaje de bienvenida
+        self.label = Gtk.Label()
+        self.labelerror = Gtk.Label()
+        self.set_welcome_message()
+        self.label.get_style_context().add_class("welcome-label")
+        self.grid.attach(self.label, 0, 0, 1, 1)
+        self.grid.attach(self.labelerror, 0, 2, 1, 1)
+        self.rfid = RfidReader()
+        self.is_reading_event = Event()  # Evento para sincronización
+        self.is_reading_event.set()  # Inicialmente, el evento empieza
+        self.read_thread = Thread(target=self.read_uid_thread)
+        self.read_thread.start()
+
+        #Aquí podria introducirse un Handler de set wellcome_screen, que ponga todo a None, excepto lo que debería estar (que es wellcome message) // O podría usarse directamente botón de logout
+        
+        self.logout_button = None  # Inicialmente, no se muestra el botón "Logout"
+        self.command_text = ""  # Variable para almacenar el texto ingresado
+        self.entry = None  # Cuadro de texto para ingresar comandos
+
+        #
+
+        # Inicializar TreeView y ListStore
+        self.liststore = Gtk.ListStore()  # Ajusta el número de columnas según tus datos
+        self.treeview = Gtk.TreeView()
+        # Agregar el TreeView al grid
+        self.grid.attach(self.treeview, 0, 3, 1, 1)
+
+        # Nuevo label para mostrar información del DataFrame
+        self.label_result = Gtk.Label()
+        self.grid.attach(self.label_result, 0, 2, 1, 1)  # Adjunta el label al grid
+
+        # Temporizador para el logout automático después de 15 segundos
+        self.timeout_id = 0
+        self.time = 10 #tiempo en segundos del timer
+        
+        self.load_css()  # Método para cargar el archivo CSS
+
+        #Aquí iría la función para inicializar todos los handlers.
+######
+######
+######
+######
+######
+######
 def request_handler(url):
     try:
         import urllib.request
@@ -34,44 +88,9 @@ request_handler(url)
 
 class RFID_Client(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="NFC Card Reader")
-        self.set_default_size(400, 200)
-        self.lcd = lcdPrint()
-
-        self.grid = Gtk.Grid()
-        self.add(self.grid)
-
-        # Inicialmente muestra el mensaje de bienvenida
-        self.label = Gtk.Label()
-        self.labelerror = Gtk.Label()
-        self.set_welcome_message()
-        self.label.get_style_context().add_class("welcome-label")
-        self.grid.attach(self.label, 0, 0, 1, 1)
-        self.grid.attach(self.labelerror, 0, 2, 1, 1)
-        self.rfid = RfidReader()
-        self.is_reading_event = Event()  # Evento para sincronización
-        self.is_reading_event.set()  # Inicialmente, el evento empieza
-        self.read_thread = Thread(target=self.read_uid_thread)
-        self.read_thread.start()
-        self.logout_button = None  # Inicialmente, no se muestra el botón "Logout"
-        self.command_text = ""  # Variable para almacenar el texto ingresado
-        self.entry = None  # Cuadro de texto para ingresar comandos
-
-        # Inicializar TreeView y ListStore
-        self.liststore = Gtk.ListStore()  # Ajusta el número de columnas según tus datos
-        self.treeview = Gtk.TreeView()
-        # Agregar el TreeView al grid
-        self.grid.attach(self.treeview, 0, 3, 1, 1)
-
-        # Nuevo label para mostrar información del DataFrame
-        self.label_result = Gtk.Label()
-        self.grid.attach(self.label_result, 0, 2, 1, 1)  # Adjunta el label al grid
-
-        # Temporizador para el logout automático después de 15 segundos
-        self.timeout_id = 0
-        self.time = 10 #tiempo en segundos del timer
         
-        self.load_css()  # Método para cargar el archivo CSS
+
+       
 
         self.init_handlers()  # Llama a un método para inicializar los handlers
 
@@ -101,25 +120,28 @@ class RFID_Client(Gtk.Window):
         if self.labelerror is not None:
             self.labelerror.hide()
 
-    def on_entry_activated(self, entry):
+     def on_entry_activated(self, entry):
         # Lógica para manejar la activación del cuadro de entrada de texto
         text = entry.get_text()
         print(f"Texto ingresado: {text}")
         self.treeview_name(text)  # Nos quedamos con el nombre de lo que solicitamos
         url = f"http://10.42.0.26:3000/{text}"
         params = {"uid": self.uidGuardado}
-        response = requests.get(url, params=params)
-        # (Re)iniciar el temporizador
-        self.restart_timeout()
-        if response.status_code == 200:
-            self.show_rows(response.text)
 
-        else:
-            mensaje = "No se pudieron obtener las notas"
-            GLib.idle_add(self.show_error, mensaje)
-
+        # Solicitud HTTP GET
+        try:
+            with urllib.request.urlopen(url) as response:
+                data = response.read().decode('utf-8')
+                self.restart_timeout()
+                if response.getcode() == 200:
+                    self.show_rows(data)
+                else:
+                    mensaje = "No se pudieron obtener las notas"
+                    GLib.idle_add(self.show_error, mensaje)
+        except urllib.error.URLError as e:
+            print(f"Error de URL: {e}")
         entry.set_text("")  # Limpiar el cuadro de entrada después de procesar el texto
-
+         
     def on_entry_changed(self, entry):
         # Lógica para manejar el cambio en el cuadro de entrada
         # Reiniciar el temporizador cada vez que se introduce algo en el cuadro de entrada
@@ -137,7 +159,7 @@ class RFID_Client(Gtk.Window):
         print("Auto Logout")
         self.on_logout_button_clicked(None)  # Simular clic en el botón Logout
 
-    def read_uid_thread(self):
+   def read_uid_thread(self):
         while True:
             self.is_reading_event.wait()  # Espera a que se permita la lectura
             uid = self.rfid.read_uid()
@@ -145,21 +167,22 @@ class RFID_Client(Gtk.Window):
             self.uidGuardado = uid
             # Realiza la solicitud HTTP GET al servidor para obtener el nombre
             url = "http://10.42.0.26:3000/obtenerNombre"
-            response = requests.get(url, params={"uid": uid})
-            if response.status_code == 200:
-                nombre = response.text
-                # (Re)iniciar el temporizador después de una entrada exitosa
-                self.restart_timeout()
-                GLib.idle_add(self.show_welcome, nombre)
-                # Mostrar el cuadro de entrada de texto después de identificar al usuario
-                GLib.idle_add(self.show_entry)
 
-            else:
-                mensaje = "No se pudo obtener el nombre"
-                GLib.idle_add(self.show_error, mensaje)
-
-            self.is_reading_event.clear()  # Reiniciar el evento para detener la lectura
-            # Añadir un mensaje en la consola para mostrar el UID leído
+            # Solicitud HTTP GET
+            try:
+                with urllib.request.urlopen(url, params={"uid": uid}) as response:
+                    data = response.read().decode('utf-8')
+                    if response.getcode() == 200:
+                        nombre = data  # Emular la recepción del nombre desde la solicitud
+                        self.restart_timeout()
+                        GLib.idle_add(self.show_welcome, nombre)
+                        GLib.idle_add(self.show_entry)
+                    else:
+                        mensaje = "No se pudo obtener el nombre"
+                        GLib.idle_add(self.show_error, mensaje)
+            except urllib.error.URLError as e:
+                print(f"Error de URL: {e}")
+            self.is_reading_event.clear()
             print(f"UID leído: {uid}")
 
     def show_welcome(self, nombre):

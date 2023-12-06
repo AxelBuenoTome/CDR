@@ -85,12 +85,55 @@ request_handler(url)
 ######
 ######
 ######
+from gi.repository import Gtk, GLib, Pango, Gdk
+from threading import Thread, Event
+from puzzle1 import RfidReader
+from LCD import lcdPrint
+import json
+import gi
+gi.require_version('Gtk', '3.0')
 
 class RFID_Client(Gtk.Window):
     def __init__(self):
-        
+        Gtk.Window.__init__(self, title="NFC Card Reader")
+        self.set_default_size(400, 200)
+        self.lcd = lcdPrint()
 
-       
+        self.grid = Gtk.Grid()
+        self.add(self.grid)
+
+        # Inicialmente muestra el mensaje de bienvenida
+        self.label = Gtk.Label()
+        self.labelerror = Gtk.Label()
+        self.set_welcome_message()
+        self.label.get_style_context().add_class("welcome-label")
+        self.grid.attach(self.label, 0, 0, 1, 1)
+        self.grid.attach(self.labelerror, 0, 2, 1, 1)
+        self.rfid = RfidReader()
+        self.is_reading_event = Event()  # Evento para sincronización
+        self.is_reading_event.set()  # Inicialmente, el evento empieza
+        self.read_thread = Thread(target=self.read_uid_thread)
+        self.read_thread.start()
+        
+        self.logout_button = None  # Inicialmente, no se muestra el botón "Logout"
+        self.command_text = ""  # Variable para almacenar el texto ingresado
+        self.entry = None  # Cuadro de texto para ingresar comandos
+
+        # Inicializar TreeView y ListStore
+        self.liststore = Gtk.ListStore()  # Ajusta el número de columnas según tus datos
+        self.treeview = Gtk.TreeView()
+        # Agregar el TreeView al grid
+        self.grid.attach(self.treeview, 0, 3, 1, 1)
+
+        # Nuevo label para mostrar información del DataFrame
+        self.label_result = Gtk.Label()
+        self.grid.attach(self.label_result, 0, 2, 1, 1)  # Adjunta el label al grid
+
+        # Temporizador para el logout automático después de 15 segundos
+        self.timeout_id = 0
+        self.time = 10 #tiempo en segundos del timer
+        
+        self.load_css()  # Método para cargar el archivo CSS
 
         self.init_handlers()  # Llama a un método para inicializar los handlers
 

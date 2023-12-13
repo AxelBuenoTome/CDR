@@ -60,25 +60,25 @@ class RFID_Client(Gtk.Window):
 ######
 ######
 ######
-def request_handler(url):
-    try:
-        import urllib.request
+class RequestHandler:
+    @staticmethod
+    def get(url, params=None):
+        if params:
+            url_values = urllib.parse.urlencode(params)
+            full_url = f"{url}?{url_values}"
+        else:
+            full_url = url
 
-        # Realizar la solicitud a la URL
-        with urllib.request.urlopen(url) as response:
-            if response.getcode() == 200:
-                # Leer y mostrar el contenido de la respuesta
-                content = response.read().decode('utf-8')  # Decodificar el contenido a texto
-                print("Request exitoso:")
-                print("Contenido de la respuesta:", content)
-            else:
-                print(f"Error en el request. Código de estado: {response.getcode()}")
-    except urllib.error.URLError as e:
-        print("Error en el request:", e)
-
-# URL a la que se hará el request (puedes cambiarla por la URL que desees)
-url = 'https://www.ejemplo.com'
-request_handler(url)
+        try:
+            with urllib.request.urlopen(full_url) as response:
+                if response.getcode() == 200:
+                    return response.read().decode('utf-8')
+                else:
+                    print(f"Error en el request. Código de estado: {response.getcode()}")
+                    return None
+        except urllib.error.URLError as e:
+            print(f"Error en el request: {e}")
+            return None
 ######
 ######
 ######

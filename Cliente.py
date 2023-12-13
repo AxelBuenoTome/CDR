@@ -72,7 +72,7 @@ class RequestHandler:                #Habrá que llamar a esta función, se enca
         try:
             with urllib.request.urlopen(full_url) as response:
                 if response.getcode() == 200:
-                    return response.read().decode('utf-8')
+                    return response.read().decode('utf-8')        #En vez de return, llamar al Handler
                 else:
                     print(f"Error en el request. Código de estado: {response.getcode()}")
                     return None

@@ -62,7 +62,7 @@ class RFID_Client(Gtk.Window):
 ######
 class RequestHandler:                #Habrá que llamar a esta función, se encarga de hacer el request y de recibir la respuesta a la vez.
     @staticmethod
-    def get(url, params=None):
+    def get(url, params=None, handler):
         if params:
             url_values = urllib.parse.urlencode(params)
             full_url = f"{url}?{url_values}"
@@ -72,7 +72,7 @@ class RequestHandler:                #Habrá que llamar a esta función, se enca
         try:
             with urllib.request.urlopen(full_url) as response:
                 if response.getcode() == 200:
-                    return response.read().decode('utf-8')        #En vez de return, llamar al Handler
+                    handler(response.read().decode('utf-8'))     #En vez de return, llamar al Handler
                 else:
                     print(f"Error en el request. Código de estado: {response.getcode()}")
                     return None

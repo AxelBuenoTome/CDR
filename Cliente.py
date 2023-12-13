@@ -60,7 +60,7 @@ class RFID_Client(Gtk.Window):
 ######
 ######
 ######
-class RequestHandler:
+class RequestHandler:                #Habrá que llamar a esta función, se encarga de hacer el request y de recibir la respuesta a la vez.
     @staticmethod
     def get(url, params=None):
         if params:

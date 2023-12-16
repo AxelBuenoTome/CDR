@@ -1,0 +1,7 @@
+Pasos para ejecutar el servidor:
+  - Instalar los modulos necesarios
+      - Mysql
+      - Express
+      - Cors
+  - Mantener la estructura de las carpetas
+  - Ejecutar con node server.js

@@ -2,10 +2,11 @@ const express = require("express");
 const { get } = require("http");//No necesario en esta version
 const { URLSearchParams } = require("url");
 const router = express.Router();
+const dbutils = require('../utils');
 
 console.log('En el handler de notas');
 
-module.exports = function (pool) {
+module.exports = function () {
   router.get("/marks", async (req, res) => {
         try{
             let q = "SELECT * FROM marks WHERE";

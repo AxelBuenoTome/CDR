@@ -4,7 +4,7 @@ const dbutils = require("../utils");
 const router = express.Router();
 
 
-module.exports = function (pool){
+module.exports = function (){
     router.get("/timetable", async(req, res)=>{
         try{
             let q ="";

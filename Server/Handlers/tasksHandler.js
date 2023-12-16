@@ -1,8 +1,9 @@
 const express = require('express');
 const { URLSearchParams } = require('url');
 const router = express.Router();
+const dbutils = require('../utils');
 
-module.exports = function (pool){
+module.exports = function (){
     router.get("/tasks", async(req,res)=>{
         try{
             let q = "";

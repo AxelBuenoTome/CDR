@@ -2,8 +2,9 @@
 const express = require('express');
 const { URLSearchParams } = require('url');
 const router = express.Router();
+const dbutils = require('../utils');
 
-module.exports = function (pool){
+module.exports = function (){
 
     router.get('/students', async(req,res)=>{
         //Demanem la connexió a la base de dades

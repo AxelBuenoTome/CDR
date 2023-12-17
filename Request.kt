@@ -25,14 +25,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cliente10.ui.theme.Cliente10Theme
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.*
-
-
 
 //Código Principal
 
@@ -277,9 +272,9 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
         val currentBackStackEntry = navController.currentBackStackEntry
         val arguments = currentBackStackEntry?.arguments
 
-        val success: Boolean = when (fromScreen) {
+    when (fromScreen) {
             "pantalla1" -> {
-                if (responseCode == HttpURLConnection.HTTP_OK) {
+                return if (responseCode == HttpURLConnection.HTTP_OK) {
                     val bundle = Bundle()
                     bundle.putString("key_myData", host)
 
@@ -290,15 +285,15 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
                         }
                         arguments?.putAll(bundle)
                     }
-                    return true
+                    true
                 } else {
-                    return false
+                    false
                 }
             }
             "pantalla2" -> {
                 // Realizamos acciones específicas para la pantalla 2
-                responseCode == HttpURLConnection.HTTP_OK
-                return true
+                
+                return responseCode == HttpURLConnection.HTTP_OK
             }
             else -> return false
         }

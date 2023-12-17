@@ -146,7 +146,7 @@ fun Pantalla1(navController: NavHostController) {
                 )
                 if (showError) {
                     Text(
-                        text = "Error en algunos de los anteriores: Url, Nombre o Uid",
+                        text = "Error en algunos de los campos anteriores: Url, Nombre o Uid",
                         color = Color.Red,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 8.dp)
@@ -273,7 +273,7 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
         val arguments = currentBackStackEntry?.arguments
 
     when (fromScreen) {
-            "pantalla1" -> {
+            "pantalla1" -> {       // Realizamos acciones específicas para la pantalla 1
                 return if (responseCode == HttpURLConnection.HTTP_OK) {
                     val bundle = Bundle()
                     bundle.putString("key_myData", host)
@@ -290,10 +290,9 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
                     false
                 }
             }
-            "pantalla2" -> {
-                // Realizamos acciones específicas para la pantalla 2
-                
+            "pantalla2" -> {        // Realizamos acciones específicas para la pantalla 2
                 return responseCode == HttpURLConnection.HTTP_OK
+                //Aquí hay que manejar la respuesta, con un handler 
             }
             else -> return false
         }
@@ -302,13 +301,13 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
     }
 
 
-private fun convertURL1(url: String, nombre: String, uid:String): String {
+    private fun convertURL1(url: String, nombre: String, uid:String): String {
         return "$url/login?nombre=$nombre&$uid"
     }
-
+    
     private fun convertURL2(url: String, order: String): String {
         return "$url/$order"
-}
+    }
 
     @Composable
     fun CustomButton(
@@ -316,7 +315,7 @@ private fun convertURL1(url: String, nombre: String, uid:String): String {
         onClick: () -> Unit
     ) {
         Button(
-            onClick = { onClick() },    //Aquí habrá que usar la función Send Data to URL
+            onClick = { onClick() },    //Aquí se ponen las funciones cuyo evento es el click del botón
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = label)

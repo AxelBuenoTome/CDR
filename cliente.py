@@ -1,18 +1,18 @@
-import requests
 import gi
 import json
 import pandas as pd
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib, Pango, Gdk
 from threading import Thread, Event
-from puzzle1 import RfidReader
-from LCD import lcdPrint
+from puzzle_1_4 import RfidReader
+from LCD import Mejorado1
+from httprequests import httprequests
 
 class RFID_Client(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="NFC Card Reader")
         self.set_default_size(400, 200)
-        self.lcd = lcdPrint()
+        self.lcd = Mejorado1()
 
         self.grid = Gtk.Grid()
         self.add(self.grid)
@@ -78,24 +78,31 @@ class RFID_Client(Gtk.Window):
             self.labelerror.hide()
 
     def on_entry_activated(self, entry):
-        # Lógica para manejar la activación del cuadro de entrada de texto
         text = entry.get_text()
-        print(f"Texto ingresado: {text}")
-        self.treeview_name(text)  # Nos quedamos con el nombre de lo que solicitamos
-        url = f"http://10.42.0.26:3000/{text}"
-        params = {"uid": self.uidGuardado}
-        response = requests.get(url, params=params)
+        self.treeview_name(text)
+        
+        # Lanzar un nuevo hilo secundario para la solicitud HTTP
+        try:
+            threading.Thread(target=lambda: httprequests.get(url, self.handle_response)).start()
+        except Exception as e:
+            print(f"Error al lanzar el hilo: {str(e)}")
+
         # (Re)iniciar el temporizador
         self.restart_timeout()
-        if response.status_code == 200:
-            self.show_rows(response.text)
-
-        else:
-            mensaje = "No se pudieron obtener las notas"
-            GLib.idle_add(self.show_error, mensaje)
 
         entry.set_text("")  # Limpiar el cuadro de entrada después de procesar el texto
 
+    def handle_response(self, response_text):
+        # Lógica para manejar la respuesta del servidor
+        if "Error" in response_text:
+            # Manejar errores, por ejemplo, mostrar un mensaje de error
+            mensaje = f"Error del servidor: {response_text}"
+            GLib.idle_add(self.show_error, mensaje)
+        else:
+            # Procesar la respuesta exitosa del servidor
+            # Llama a la función para imprimir los datos en la consola y en la interfaz gráfica
+            self.show_rows(response_text)
+            
     def on_entry_changed(self, entry):
         # Lógica para manejar el cambio en el cuadro de entrada
         # Reiniciar el temporizador cada vez que se introduce algo en el cuadro de entrada
@@ -117,26 +124,35 @@ class RFID_Client(Gtk.Window):
         while True:
             self.is_reading_event.wait()  # Espera a que se permita la lectura
             uid = self.rfid.read_uid()
-            # guardamos el uid internamente
+            # Guardamos el uid internamente
             self.uidGuardado = uid
-            # Realiza la solicitud HTTP GET al servidor para obtener el nombre
-            url = "http://10.42.0.26:3000/obtenerNombre"
-            response = requests.get(url, params={"uid": uid})
-            if response.status_code == 200:
-                nombre = response.text
-                # (Re)iniciar el temporizador después de una entrada exitosa
-                self.restart_timeout()
-                GLib.idle_add(self.show_welcome, nombre)
-                # Mostrar el cuadro de entrada de texto después de identificar al usuario
-                GLib.idle_add(self.show_entry)
-
-            else:
-                mensaje = "No se pudo obtener el nombre"
-                GLib.idle_add(self.show_error, mensaje)
+            # Construir la URL con el uid
+            url = f"http://10.42.0.26:3000/obtenerNombre?uid={uid}"
+            # Utilizar la clase httprequests para manejar la solicitud HTTP
+            # Se ejecuta dentro del propio hilo secundario
+            httprequests.get(url, self.handle_server_response)
 
             self.is_reading_event.clear()  # Reiniciar el evento para detener la lectura
             # Añadir un mensaje en la consola para mostrar el UID leído
             print(f"UID leído: {uid}")
+
+    def handle_server_response(self, response_text):
+        # Lógica para manejar la respuesta del servidor
+        if "Error" in response_text:
+            # Manejar errores, por ejemplo, mostrar un mensaje de error
+            mensaje = f"Error del servidor: {response_text}"
+            #Para que se modifique la interfaz desde el hilo principal
+            GLib.idle_add(self.show_error, mensaje)
+        else:
+            # Procesar la respuesta exitosa del servidor
+            nombre = response_text
+            # (Re)iniciar el temporizador después de una entrada exitosa
+            self.restart_timeout()
+            #Para que se modifique la interfaz desde el hilo principal
+            GLib.idle_add(self.show_welcome, nombre)
+            # Mostrar el cuadro de entrada de texto después de identificar al usuario
+            #Para que se modifique la interfaz desde el hilo principal
+            GLib.idle_add(self.show_entry)
 
     def show_welcome(self, nombre):
         self.label.set_markup(f'<span size="x-large" weight="bold">{nombre}</span>')
@@ -157,7 +173,8 @@ class RFID_Client(Gtk.Window):
         if self.entry is None:
             self.entry = Gtk.Entry()
             self.grid.attach(self.entry, 0, 1, 1, 1)
-            self.entry.connect("activate", self.process_entry)  # Conectar la señal "activate" al procesamiento del texto
+            self.entry.connect("activate", self.on_entry_activated)
+            self.entry.connect("changed", self.on_entry_changed) 
             self.entry.show()
         if self.treeview is not None:
             self.treeview.hide()
@@ -184,28 +201,10 @@ class RFID_Client(Gtk.Window):
             self.treeview.hide()
         if self.labelerror is not None:
             self.labelerror.hide()
-
-    def process_entry(self, entry):
-        # Procesar el texto ingresado cuando se presiona "Enter"
-        text = entry.get_text()
-        print(f"Texto ingresado: {text}")
-        self.treeview_name(text) #nos quedamos con el nombre de lo que solicitamos
-        # Realiza la solicitud HTTP GET al servidor para obtener las notas
-        url = f"http://10.42.0.26:3000/{text}"
-        params = {"uid": self.uidGuardado}
-
-        response = requests.get(url, params=params)
-        # (Re)iniciar el temporizador después de una entrada exitosa
-        self.restart_timeout()
-        
-        if response.status_code == 200:
-            # Llama a la función para imprimir los datos en la consola y en la interfaz gráfica
-            self.show_rows(response.text)
-        else:
-            mensaje = "No se pudieron obtener las notas"
-            GLib.idle_add(self.show_error, mensaje)
-
-        entry.set_text("")  # Limpiar el cuadro de entrada después de procesar el texto
+        #detener el temporizador
+        if self.timeout_id:
+            GLib.source_remove(self.timeout_id)
+            self.timeout_id = 0            
 
     def show_rows(self, data):
         try:
@@ -270,7 +269,6 @@ class RFID_Client(Gtk.Window):
         for i, column_title in enumerate(column_names):
             column = self.treeview.get_column(i)
             column.set_title(column_title)
-
             
         #mostramos el treeview
         self.treeview.show()

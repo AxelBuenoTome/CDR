@@ -292,7 +292,7 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
             }
             "pantalla2" -> {        // Realizamos acciones específicas para la pantalla 2
                 return responseCode == HttpURLConnection.HTTP_OK
-                //Aquí hay que manejar la respuesta, con un handler 
+                //Aquí hay que manejar la respuesta, con un handler
             }
             else -> return false
         }
@@ -302,9 +302,9 @@ private fun sendDataToURL(urlString: String, fromScreen: String, navController: 
 
 
     private fun convertURL1(url: String, nombre: String, uid:String): String {
-        return "$url/login?nombre=$nombre&$uid"
+        return "$url/login?nombre=$nombre&uid=$uid"
     }
-    
+
     private fun convertURL2(url: String, order: String): String {
         return "$url/$order"
     }

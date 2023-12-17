@@ -1,3 +1,35 @@
+# Informe Final
+
+## Cliente
+
+El cliente RFID ha sido desarrollado por Axel Bueno y David Izkara.
+
+### Actualizaciones
+
+- **HTTP Request Modularizado:** Ahora el HTTP Request se ha trasladado a un archivo Python independiente, y se le pueden pasar handlers como parámetros.
+  
+- **Eliminación de Requests:** La librería `requests` ya no se utiliza en el cliente.
+
+- **Modificación en la Transferencia de UID:** Se ha modificado la forma en que se pasa el UID como parámetro.
+
+- **Desactivación del Temporizador:** Ahora, el temporizador se desactiva al pulsar el botón de logout.
+
+- **Manejo de Errores Mejorado:** Los errores se han vuelto más genéricos para facilitar la legibilidad del código.
+
+- **Hilos Auxiliares:** Se han añadido hilos auxiliares en la función `on_entry_activated` para ejecutarla desde un hilo auxiliar.
+
+## Servidor
+
+La implementación del servidor ha sido un esfuerzo colaborativo entre Victor y David Cerezo.
+
+## Cliente Web
+
+El cliente web ha sido desarrollado por Victor.
+
+## Cliente Android
+
+El cliente Android ha sido hábilmente creado por David Izkara.
+
 # CDR
 - Cliente: Axel & David (Izkara)
 - Servidor: Víctor & David (Cerezo)

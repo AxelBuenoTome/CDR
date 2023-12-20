@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Course Manager</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="connect.js"></script>
+</head>
+
+<body>
+    <div class="container" id="loginShow">
+        <h1>Course Manager</h1>
+
+        <form id="loginForm">
+            <label id= "labeluser" for="username">Username:</label><br>
+            <input type="text" id="username" name="username"><br>
+
+            <label id = "labelpass" for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+
+            <input type="submit" value="Login" id="loginbutton"
+                onclick="event.preventDefault(); handleLoginFormSubmit(event)">
+        </form>
+        <!--<button onclick="sendGetRequest()">Send GET Request</button> Esto era un log para debugg -->
+        <p id="response"></p>
+    </div>
+
+    <div class="container" id="dashboard" style="display:none">
+        <form id="searchForm">
+            <label id="searchid" for="search">Introduce the query:</label><br>
+            <div style="display: flex;">
+                <input type="text" id="searchBar" placeholder="Search...">
+                <button type="button" id = "searchButton" value="search" onclick="event.preventDefault();sendSearchRequest(document.getElementById('searchBar').value)">Search</button>
+            </div>
+        </form>
+
+        <div id="table" style="display:none">
+        </div>
+
+        <!-- Logout button -->
+        <button id="logoutButton" onclick="logout()">Logout</button>
+    </div>
+</body>
+
+</html>
+

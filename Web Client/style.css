@@ -1,0 +1,160 @@
+/* style.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    background: #63b6d9;
+    background-image: url('upcbackground1.jpeg');
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    padding: 12px;
+    backdrop-filter: blur(4px) saturate(200%);
+    -webkit-backdrop-filter: blur(4px) saturate(200%);
+    background-color: rgba(78, 102, 143, 0.68);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    text-align: center; /* Center text within the container */
+}
+
+h1 {
+    color: #ffffff;
+    text-align: center;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#labeluser,
+#labelpass {
+    color: #ffffff;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"],
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block; /* Change to inline-block to align buttons horizontally */
+    margin: 0 10px; /* Add margin for spacing between buttons */
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #45a049;
+}
+
+#dashboard {
+    display: none;
+}
+
+#searchid {
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    margin-right: 80px;
+}
+
+#table {
+    margin: 0 auto;
+}
+
+#searchForm {
+    margin-bottom: 20px;
+}
+
+#searchBar {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#searchButton {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+#searchButton:hover {
+    background-color: #45a049;
+}
+
+#logoutButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+/* Style for the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+/* Table header styles */
+th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Table cell styles */
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Alternating row colors for better readability */
+tr {
+    background-color: #f9f9f9;
+}
+
+/* Hover effect on rows */
+tr:hover {
+    background-color: #e0e0e0;
+}

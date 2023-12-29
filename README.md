@@ -32,7 +32,7 @@ El cliente Android ha sido hábilmente creado por David Izkara.
 
 # CDR
 - Cliente: Axel & David (Izkara)
-- Servidor: Víctor & David (Cerezo)
+- Servidor: David (Cerezo)
 
 # Fases
 

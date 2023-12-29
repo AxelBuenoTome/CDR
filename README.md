@@ -24,7 +24,7 @@ La implementación del servidor ha sido un esfuerzo de David Cerezo.
 
 ## Cliente Web
 
-El cliente web ha sido desarrollado por Victor.
+El cliente web funcional ha sido desarrollado por David.
 
 ## Cliente Android
 

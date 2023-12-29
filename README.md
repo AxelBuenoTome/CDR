@@ -20,7 +20,7 @@ El cliente RFID ha sido desarrollado por Axel Bueno y David Izkara.
 
 ## Servidor
 
-La implementación del servidor ha sido un esfuerzo colaborativo entre Victor y David Cerezo.
+La implementación del servidor ha sido un esfuerzo de David Cerezo.
 
 ## Cliente Web
 
